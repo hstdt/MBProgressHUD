@@ -379,7 +379,11 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
                 activityIndicator.color = [UIColor whiteColor];
 #if !TARGET_OS_MACCATALYST
             } else {
+#if TARGET_OS_VISION
+                activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+#else
                activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+#endif
             }
 #endif
             [activityIndicator startAnimating];
@@ -739,7 +743,8 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 #pragma mark - Notifications
 
 - (void)registerForNotifications {
-#if !TARGET_OS_TV && !TARGET_OS_MACCATALYST
+    
+#if !TARGET_OS_TV && !TARGET_OS_MACCATALYST && !TARGET_OS_VISION
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 
     [nc addObserver:self selector:@selector(statusBarOrientationDidChange:)
@@ -748,7 +753,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 }
 
 - (void)unregisterFromNotifications {
-#if !TARGET_OS_TV && !TARGET_OS_MACCATALYST
+#if !TARGET_OS_TV && !TARGET_OS_MACCATALYST && !TARGET_OS_VISION
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc removeObserver:self name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 #endif
